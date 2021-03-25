@@ -12,7 +12,7 @@ void create_hpp(std::string name)
     file << "{" << std::endl;
     file << "\tpublic : " << std::endl;
     file << "\t\t" << name << "(void);" << std::endl;
-    file << "\t\t" << name << "(Fixed const & src);" << std::endl;
+    file << "\t\t" << name << "(" << name <<  " const & src);" << std::endl;
     file << "\t\t~" << name << "();\n" << std::endl;
     file << "\t\t" << name << "\t&operator=(" << name << " const & rhs);" << std::endl;
     file << "};\n" << std::endl;
@@ -27,9 +27,9 @@ void write_constructor(std::string line, std::ofstream *cpp, std::string class_n
         *cpp << class_name << "::" << class_name << "(void)" << std::endl;
         *cpp << "{\n\n}\n" << std::endl;
     }
-    else if (line.find("(Fixed const & src)") == class_name.size())
+    else if (line.find("(" + class_name + " const & src)") == class_name.size())
     {
-        *cpp << class_name << "::" << class_name << "(Fixed const & src)" << std::endl;
+        *cpp << class_name << "::" << class_name << "(" << class_name << " const & src)" << std::endl;
         *cpp << "{\n\t*this = src;\n}\n" << std::endl; 
     }
     else
@@ -67,7 +67,7 @@ void write_operator(std::string line, std::ofstream *cpp, std::string class_name
 
     ope = find_operator(line);
     //if unary operator
-    *cpp << class_name << " &" << class_name << "::operator" << ope << "(Fixed const & rhs)" << std::endl;
+    *cpp << class_name << " &" << class_name << "::operator" << ope << "(" << class_name << " const & rhs)" << std::endl;
     *cpp << "{\n\tthis->[...] = rhs.[...]();" << std::endl;
     *cpp << "\treturn *this;" << std::endl;
     *cpp << "}\n" << std::endl;
@@ -83,6 +83,7 @@ void write_function(std::string line, std::ofstream *cpp, std::string class_name
     type = line.substr(0, line.rfind("\t", line.size()));
     name_variable = line.substr(line.find("get") + 3, line.rfind("(", line.size()) - (line.find("get") + 3));
     param = line.substr(line.find("("), line.find(")") - line.find("(") + 1);
+    std::cout << type << std::endl;
     *cpp << type << "\t" << class_name << "::get" << name_variable << param << " const" << std::endl;
     *cpp << "{\n\treturn (this->_" << lowercase(name_variable) << ");\n}\n" << std::endl;
 }

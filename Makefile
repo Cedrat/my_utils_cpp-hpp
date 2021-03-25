@@ -1,4 +1,4 @@
-NAME = a.out
+NAME = utils_cpp
 SRCS = main.cpp errors.cpp utils.cpp
 
 OBJS = ${SRCS:.cpp=.o}
@@ -10,7 +10,7 @@ RM = rm -f
 all : 		${NAME}
 
 ${NAME}:	${OBJS}
-			clang++ -std=c++98 ${CFLAGS} ${SRCS}
+			clang++ -std=c++98 -o ${NAME} ${CFLAGS} ${SRCS}
 
 clean :		
 			${RM} ${OBJS} ${BONUS}
